@@ -49,7 +49,7 @@ class League{
 //Ahora metemos el meth setup en la hija
 class PointBasedLeague extends League { 
     constructor (name, teams=[],config={} ){
-        //Aprovechamos el constructor de la madre
+        //Aprovechamos el constructor de clase padre
         super(name, teams, config)
     }
     setup(config){
@@ -63,17 +63,31 @@ class PointBasedLeague extends League {
         this.config= Object.assign(defaultConfig, config)
     }
     customizeTeam(teamName){
-        /*return{
+            //Hacer lo siguiente:
             //Llamar al meth customizeTeam del padre
             //Devolver objeto con los datos del objeto que devuelve el padre
-            //y además las propiedades goalsFor:0 y goalsAgainst:0
-         
-        }
-        */   
+            //y además las propiedades goalsFor:0 y goalsAgainst:0...USANDO SPREADING
+         const customizedTeam= super.customizeTeam(teamName);
+         //****Forma de añadir propiedades sin usar spreading
+         //customizedTeam.points=0;
+         //customizedTeam.goalsFor=0;
+         //customizedTeam.goalsAgainst=0;
+         //return customizedTeam        
+         //****Forma de añadir propiedades usando spreading
+         return {
+             points:0;
+             goalsFor:0;
+             goalsAgaints:0;
+             ...customizedTeam  //Exparce propiedades del objeto con spreading...equivalente a cuando un array expande sus elementos dentro de otro 
+         }
     }
 }
 
 //Equipos
+const liverPoolTeams =['Liverpool', 'Everton'];
+const manchesterTeams =['Manchester City'];
+const londonTeams = ['Arsenal', 'Chelsea', 'Fulham', 'West Ham', 'Tottenham', 'Crystal Palace']
+
 const premierLeagueTeams=['Chelsea', 'Arsenal'];
 const config = {rounds: 2, pointsPerWin:3};
 const premier =new PointBasedLeague ('Premier League', premierLeagueTeams, config);
