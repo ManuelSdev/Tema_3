@@ -8,7 +8,8 @@ class League{
    
     constructor(name, teams=[], config={}) {
         this.name=name;
-        this.teams=teams;
+        //this.teams=teams; Lo quitamos para crear un meth setupTeams
+        this.setupTeams(teams);
         this.matchDaySchedule=[];
         //Ahora el constructor llama a un meth setup al que le va  a pasar la configuración
         //El meth setup lo definimos después, en los métodos de la clase
@@ -22,9 +23,22 @@ class League{
      const defaultConfig= {rounds:1}
     //El meth assign retorna el objeto parcheado y ese lo guardamos en this.config
     this.config= Object.assign(defaultConfig, config)
+   }
 
- }
-
+   setupTeams(teamNames){
+       //Array vacío para ir metiendo los equipos
+       this.teams=[];
+       for(const teamName of teamNames){
+           //Cada equipo es un objeto literal
+           const team ={
+               name: teamName,
+               matchesWon:0,
+               matchesDrawn:0,
+               matchesLost:0
+           }
+           this.teams.push(team);
+       }
+   }
 }
 
 //Ahora metemos el meth setup en la hija
@@ -33,7 +47,6 @@ class PointBasedLeague extends League {
         //Aprovechamos el constructor de la madre
         super(name, teams, config)
     }
-
     setup(config){
         const defaultConfig ={      //Esta var será un objeto con la configuración (por defecto) particular de este tipo de liga
             rounds:1,
@@ -46,7 +59,6 @@ class PointBasedLeague extends League {
     }
 }
 
-
 //Equipos
 const premierLeagueTeams=['Chelsea', 'Arsenal'];
 const config = {rounds: 2, pointsPerWin:3};
@@ -54,7 +66,6 @@ const premier =new PointBasedLeague ('Premier League', premierLeagueTeams, confi
 
 //Imprimir
 //console.log(premier);
-
 for (const team of premier.teams){
     console.log(team)
 }
