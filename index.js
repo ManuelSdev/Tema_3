@@ -30,13 +30,18 @@ class League{
        this.teams=[];
        for(const teamName of teamNames){
            //Cada equipo es un objeto literal
-           const team ={
-               name: teamName,
-               matchesWon:0,
-               matchesDrawn:0,
-               matchesLost:0
-           }
+           const team =this.customizeTeam(teamName);
            this.teams.push(team);
+       }
+   }
+
+   customizeTeam(teamName){
+       return{
+        name: teamName,
+        matchesWon:0,
+        matchesDrawn:0,
+        matchesLost:0
+
        }
    }
 }
@@ -56,6 +61,15 @@ class PointBasedLeague extends League {
         }
         //Crea parche con la config introducida en el constructor
         this.config= Object.assign(defaultConfig, config)
+    }
+    customizeTeam(teamName){
+        /*return{
+            //Llamar al meth customizeTeam del padre
+            //Devolver objeto con los datos del objeto que devuelve el padre
+            //y además las propiedades goalsFor:0 y goalsAgainst:0
+         
+        }
+        */   
     }
 }
 
