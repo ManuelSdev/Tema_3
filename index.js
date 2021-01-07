@@ -20,11 +20,27 @@ import { premierLeagueTeams} from './teams.js'
 const config = {rounds: 2, pointsPerWin:3};
 const premier =new FootballLeague ('Premier League', premierLeagueTeams, config);
 
-//Imprimir
-//console.log(premier);
+
+
+/*Comento esto para hacer la misma función con la de abajo que usamos para el ejemplo de maps
 for (const team of premier.teams){
     console.log(team)
 }
+*/
+
+//Ejemplo de uso de meth map de array
+function getTeamName(team){
+    return team.name
+}
+const teamNames = premier.teams.map(getTeamName) //esto cambia cada elemento del array premier.teams (array de objetos literales) por lo que retorna la funcion getTeamName al recibir como parametro un objeto literal team...es decir, retorna solo el valor de la propiedad nombre de cada objeto literal team
+for (const teamName of teamNames){
+    console.log(teamName)
+}
+
+
+//Imprimir
+//console.log(premier);
+
 
 //console.log(`Config: ${premier.config}`);  Así no funca: imrpime object Object
 console.log('CONFIG', premier.config);      //Así si anda...
