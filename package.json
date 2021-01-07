@@ -1,0 +1,20 @@
+{
+  "name": "intro-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ManuelSdev/Tema_3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ManuelSdev/Tema_3/issues"
+  },
+  "homepage": "https://github.com/ManuelSdev/Tema_3#readme",
+  "type": "module"
+}

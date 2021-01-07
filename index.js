@@ -2,95 +2,23 @@
 
 
 //Clase genéríca liga....hay que simplificar constructor
+//Ahora paso las clases a  módulos que guardo en carpeta  clases
+
+//Luego importo las clases
+//No importo League porque a esa la importa cada clase que hereda de ella en su archivo
+//Importo PointsBasedLeague porque es una clase de uso final
+//Le puedo cambiar el nombre porque está exportada como default: la llamo FootballLeague
+
+import FootballLeague from './classes/PointsBasedLeague.js'
 
 
-class League{
-   
-    constructor(name, teams=[], config={}) {
-        this.name=name;
-        //this.teams=teams; Lo quitamos para crear un meth setupTeams
-        this.setupTeams(teams);
-        this.matchDaySchedule=[];
-        //Ahora el constructor llama a un meth setup al que le va  a pasar la configuración
-        //El meth setup lo definimos después, en los métodos de la clase
-        //Quitamos esto y lo pasamos al meth setup...ya no irá con this, sino con const
-        //this.defaultConfig= {rounds:1}//Como justo despues usamos el meth setup asignando this.defaultConfig a this.config, tenemos que declarar this.defaultConfig antes de usar this.setup
-        //this.setup(config);
-        this.setup(config)
-    }
+//Equipos...se han llevado al archivo teams.js y desde ahí se han exportado todos
+//Ahora importo los que necesite
 
-   setup(config){
-     const defaultConfig= {rounds:1}
-    //El meth assign retorna el objeto parcheado y ese lo guardamos en this.config
-    this.config= Object.assign(defaultConfig, config)
-   }
+import { premierLeagueTeams} from './teams.js'
 
-   setupTeams(teamNames){
-       //Array vacío para ir metiendo los equipos
-       this.teams=[];
-       for(const teamName of teamNames){
-           //Cada equipo es un objeto literal
-           const team =this.customizeTeam(teamName);
-           this.teams.push(team);
-       }
-   }
-
-   customizeTeam(teamName){
-       return{
-        name: teamName,
-        matchesWon:0,
-        matchesDrawn:0,
-        matchesLost:0
-
-       }
-   }
-}
-
-//Ahora metemos el meth setup en la hija
-class PointBasedLeague extends League { 
-    constructor (name, teams=[],config={} ){
-        //Aprovechamos el constructor de clase padre
-        super(name, teams, config)
-    }
-    setup(config){
-        const defaultConfig ={      //Esta var será un objeto con la configuración (por defecto) particular de este tipo de liga
-            rounds:1,
-            pointsPerWin:3,
-            poinstPerDraw:1,
-            pointsPerLose:0
-        }
-        //Crea parche con la config introducida en el constructor
-        this.config= Object.assign(defaultConfig, config)
-    }
-    customizeTeam(teamName){
-            //Hacer lo siguiente:
-            //Llamar al meth customizeTeam del padre
-            //Devolver objeto con los datos del objeto que devuelve el padre
-            //y además las propiedades goalsFor:0 y goalsAgainst:0...USANDO SPREADING
-         const customizedTeam= super.customizeTeam(teamName);
-         //****Forma de añadir propiedades sin usar spreading
-         //customizedTeam.points=0;
-         //customizedTeam.goalsFor=0;
-         //customizedTeam.goalsAgainst=0;
-         //return customizedTeam        
-         //****Forma de añadir propiedades usando spreading
-         return {
-             points:0;
-             goalsFor:0;
-             goalsAgaints:0;
-             ...customizedTeam  //Exparce propiedades del objeto con spreading...equivalente a cuando un array expande sus elementos dentro de otro 
-         }
-    }
-}
-
-//Equipos
-const liverPoolTeams =['Liverpool', 'Everton'];
-const manchesterTeams =['Manchester City'];
-const londonTeams = ['Arsenal', 'Chelsea', 'Fulham', 'West Ham', 'Tottenham', 'Crystal Palace']
-
-const premierLeagueTeams=['Chelsea', 'Arsenal'];
 const config = {rounds: 2, pointsPerWin:3};
-const premier =new PointBasedLeague ('Premier League', premierLeagueTeams, config);
+const premier =new FootballLeague ('Premier League', premierLeagueTeams, config);
 
 //Imprimir
 //console.log(premier);
