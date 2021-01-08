@@ -20,7 +20,7 @@ import { premierLeagueTeams} from './teams.js'
 const config = {rounds: 2, pointsPerWin:3};
 //const premier =new FootballLeague ('Premier League', premierLeagueTeams, config); //Comentada para reducir equipos más abajo
 
-const premier =new FootballLeague ('Premier League', ['A','B','C','D'], config);
+const premier =new FootballLeague ('Premier League', premierLeagueTeams, config);
 
 
 /*Comento esto para hacer la misma función con la de abajo que usamos para el ejemplo de maps
