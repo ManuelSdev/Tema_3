@@ -18,8 +18,9 @@ import FootballLeague from './classes/PointsBasedLeague.js'
 import { premierLeagueTeams} from './teams.js'
 
 const config = {rounds: 2, pointsPerWin:3};
-const premier =new FootballLeague ('Premier League', premierLeagueTeams, config);
+//const premier =new FootballLeague ('Premier League', premierLeagueTeams, config); //Comentada para reducir equipos más abajo
 
+const premier =new FootballLeague ('Premier League', ['A','B','C','D'], config);
 
 
 /*Comento esto para hacer la misma función con la de abajo que usamos para el ejemplo de maps
@@ -27,7 +28,6 @@ for (const team of premier.teams){
     console.log(team)
 }
 */
-
 //Ejemplo de uso de meth map de array
 function getTeamName(team){
     return team.name
@@ -36,11 +36,14 @@ const teamNames = premier.teams.map(getTeamName) //esto cambia cada elemento del
 for (const teamName of teamNames){
     console.log(teamName)
 }
-
+//Fin del ejemplo 
 
 //Imprimir
 //console.log(premier);
-
-
 //console.log(`Config: ${premier.config}`);  Así no funca: imrpime object Object
 console.log('CONFIG', premier.config);      //Así si anda...
+
+
+//Prueba de la creacion de tabla del algoritmo todos vs todos en League
+premier.scheduleMatchDays()
+console.log(premier.matchDaySchedule)
