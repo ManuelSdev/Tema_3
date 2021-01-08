@@ -107,10 +107,29 @@ export default class League{
            })
        })
    }
+    //establecer último equipo de la lista como visitante o local alternativamente
+   fixLastTeamSchedule(){
+       let matchDayNumber=1 //Número de jornada: la primera es impar
+       const teamNames= this.getTeamNames()
+       const lastTeamName= teamNames[teamNames.length - 1]
 
+       this.matchDaySchedule.forEach(matchDay =>{
+           const firstMatch =matchDay[0]
+           if(matchDayNumber % 2 == 0) { //Si la jornada es par -> juega en casa
+            firstMatch[AWAY_TEAM]= firstMatch[LOCAL_TEAM]
+            firstMatch[LOCAL_TEAM]=lastTeamName
+           }else{ 
+            firstMatch[AWAY_TEAM]= lastTeamName
+           }
+           matchDayNumber++ //Aumenta la jornada
+          
+
+       })
+   }
    scheduleMatchDays(){
        this.initSchedule()
        this.setLocalTeams()
        this.setAwayTeams()
+       this.fixLastTeamSchedule()  //Ajusta el último equipo que es el 8 del algoritmo wiki
    }
 }
