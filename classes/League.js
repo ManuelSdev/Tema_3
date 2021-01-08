@@ -1,4 +1,5 @@
-
+const LOCAL_TEAM=0;
+const AWAY_TEAM=1;
 export default class League{
    
     constructor(name, teams=[], config={}) {
@@ -56,16 +57,24 @@ export default class League{
 
    }
 
-   scheduleMatchDays(){
-       this.initSchedule()
-       //Tenemos 4 equipos: el array de equipos tiene longitud 4
-       //El máximo de equipos que juegan en casa es 2: restamos 2 a la longitud del array teams
-       const maxHomeTeams =this.teams.length-2
-       let teamIndex=0
-       this.matchDaySchedule.forEach(matchDay => {//Por cada jornada
+   getTeamNames(){
+       return this.teams.map(teams=>teams.name)
+   }
+
+   setLocalTeams(){
+        const teamNames=this.getTeamNames()
+        //Tenemos 4 equipos: el array de equipos tiene longitud 4
+        //El máximo de equipos que juegan en casa es 2: restamos 2 a la longitud del array teams
+        const maxHomeTeams =this.teams.length-2
+        let teamIndex=0
+        this.matchDaySchedule.forEach(matchDay => {//Por cada jornada
             matchDay.forEach(match =>{ //Por cada partido de la jornada
                 //Establecer el equipo local
-                match[0]=teamIndex
+                //Accedemos al nombre del equipo por el array
+                //matchDay es el array que contiene varios arrays, y estos últimos tienen dos elementos:
+                //equipo local y visitante...accedemos al primero con índice 0 y al segundo con 1
+                //Para ello, definimos LOCAL_TEAM=0  y AWAY_TEAM=1
+                match[LOCAL_TEAM]=teamNames[teamIndex]
                 teamIndex++
                 //Esto hace la primera tabla que sale en "elaboración del fixture", que hace
                 // 1 2 3 4 5 6 7 y vuelve a 1...nosotros hacemos 0 1 2 (tres equipos porque el total es cuatro
@@ -73,9 +82,12 @@ export default class League{
                 if(teamIndex > maxHomeTeams){
                     teamIndex=0;
                 }
-
             })
+        })
+   }
 
-       })
+   scheduleMatchDays(){
+       this.initSchedule()
+       this.setLocalTeams()
    }
 }
