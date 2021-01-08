@@ -17,7 +17,7 @@ import FootballLeague from './classes/PointsBasedLeague.js'
 
 import { premierLeagueTeams} from './teams.js'
 
-const config = {rounds: 2, pointsPerWin:3};
+const config = {pointsPerWin:3};
 //const premier =new FootballLeague ('Premier League', premierLeagueTeams, config); //Comentada para reducir equipos más abajo
 
 const premier =new FootballLeague ('Premier League', premierLeagueTeams, config);
