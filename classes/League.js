@@ -86,8 +86,31 @@ export default class League{
         })
    }
 
+   setAwayTeams(){
+      const teamNames=this.getTeamNames()
+       const maxAwayTeams = this.teams.length-2
+       let teamIndex= maxAwayTeams
+       this.matchDaySchedule.forEach(matchDay =>{//Aquí recorro las jornadas
+           //Condición para que no establezca visitante en el primer partido...porque esa columna
+           //es la primera, que en wiki se rellena directamente con el 8!!
+           let isFirstMatch=true;
+           matchDay.forEach(match => {//Aquí recorro los partidos de la jornada
+               if(isFirstMatch){
+                   isFirstMatch=false;
+               }else{
+                   match[AWAY_TEAM]=teamNames[teamIndex]
+                   teamIndex--//en lugar de incrementar, baja...así empieza por el final del array y no repite equipos
+                   if (teamIndex <0){
+                       teamIndex= maxAwayTeams
+                   }
+               }
+           })
+       })
+   }
+
    scheduleMatchDays(){
        this.initSchedule()
        this.setLocalTeams()
+       this.setAwayTeams()
    }
 }
