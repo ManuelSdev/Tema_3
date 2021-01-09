@@ -1,3 +1,17 @@
+//Meth de mezcla de elementos del array sacado de github
+Array.prototype.shuffle = function()
+{
+	var i = this.length;
+	while (i)
+	{
+		var j = Math.floor(Math.random() * i);
+		var t = this[--i];
+		this[i] = this[j];
+		this[j] = t;
+	}
+	return this;
+}
+
 const LOCAL_TEAM=0;
 const AWAY_TEAM=1;
 export default class League{
@@ -29,6 +43,8 @@ export default class League{
            const team =this.customizeTeam(teamName);
            this.teams.push(team);
        }
+       //Uso el meth shuffle añadido al prototipo array
+       this.teams.shuffle()
    }
 
    customizeTeam(teamName){
@@ -61,11 +77,39 @@ export default class League{
        return this.teams.map(teams=>teams.name)
    }
 
+   //Crea método que devuelve nombres de equipos en función de que el número de equipos sea par o impar
+   getTeamNamesForSchedule(){
+       const teamNames = this.getTeamNames()
+       console.log(teamNames)
+       if(teamNames.length % 2 == 0){//Si son pares
+           return teamNames
+       }else{
+           //Si son imares devuelve un array con los nombres + null
+           //Tener null es mejor que tener un equipo llamado "descansa": null no es nada
+           return [...teamNames, null]
+
+       }
+   }
+
+
    setLocalTeams(){
+       /*
         const teamNames=this.getTeamNames()
+        ahora usamos el meth getTeamNamesForSchedule que tiene en cuenta si el nº de equipos es impar
+        */
+       const teamNames=this.getTeamNamesForSchedule()
+
+
         //Tenemos 4 equipos: el array de equipos tiene longitud 4
         //El máximo de equipos que juegan en casa es 2: restamos 2 a la longitud del array teams
-        const maxHomeTeams =this.teams.length-2
+        /*
+        const maxHomeTeams =this.teams.length-2 ******
+        Para tener equipos impares, usamos un equipo fake llamado "descansa" que hace que todo funcione como con equipos pares
+        Como "descansa" no es un equipo real, no lo queremos dentro del array "teams", entonces no podemos 
+        Usar la longitud de teams para establecer const maxHomeTeams.....
+        ....Ahora contamos el max número de equipos contando los nombress de los equipos porque aquí si está el nombre "descansa"
+        */
+        const maxHomeTeams =teamNames.length-2 
         let teamIndex=0
         this.matchDaySchedule.forEach(matchDay => {//Por cada jornada
             matchDay.forEach(match =>{ //Por cada partido de la jornada
@@ -87,8 +131,8 @@ export default class League{
    }
 
    setAwayTeams(){
-      const teamNames=this.getTeamNames()
-       const maxAwayTeams = this.teams.length-2
+      const teamNames=this.getTeamNamesForSchedule()
+       const maxAwayTeams = teamNames.length-2
        let teamIndex= maxAwayTeams
        this.matchDaySchedule.forEach(matchDay =>{//Aquí recorro las jornadas
            //Condición para que no establezca visitante en el primer partido...porque esa columna
@@ -110,9 +154,10 @@ export default class League{
     //establecer último equipo de la lista como visitante o local alternativamente
    fixLastTeamSchedule(){
        let matchDayNumber=1 //Número de jornada: la primera es impar
-       const teamNames= this.getTeamNames()
-       const lastTeamName= teamNames[teamNames.length - 1]
 
+       const teamNames= this.getTeamNamesForSchedule()
+
+       const lastTeamName= teamNames[teamNames.length - 1]
        this.matchDaySchedule.forEach(matchDay =>{
            const firstMatch =matchDay[0]
            if(matchDayNumber % 2 == 0) { //Si la jornada es par -> juega en casa
