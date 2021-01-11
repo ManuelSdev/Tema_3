@@ -17,10 +17,10 @@ import FootballLeague from './classes/PointsBasedLeague.js'
 
 import { premierLeagueTeams} from './teams.js'
 
-const config = {pointsPerWin:3};
+const config = {rounds:2};
 //const premier =new FootballLeague ('Premier League', premierLeagueTeams, config); //Comentada para reducir equipos más abajo
 //Ejemplo impar metiendo 'A' y esparciendo el resto de equipos de premierLeagueTeams
-const premier =new FootballLeague ('Premier League', ['A', ...premierLeagueTeams], config);
+const premier =new FootballLeague ('Premier League', ['A','B','C','D'], config);
 
 
 /*Comento esto para hacer la misma función con la de abajo que usamos para el ejemplo de maps

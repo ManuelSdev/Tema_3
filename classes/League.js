@@ -58,7 +58,7 @@ export default class League{
    }
 //Creación de la tabla del algoritmo todos vs todos
 
-   initSchedule(){
+   initSchedule(round){
        const numberOfMatchDays = this.teams.length-1
        const numberOfMatchesPerMatchDay = this.teams.length /2
        for (let i=0; i< numberOfMatchDays; i++){
@@ -68,7 +68,8 @@ export default class League{
                matchDay.push(match)
            }
            //Una vez añadidos todos lo partidos a la jornada
-           this.matchDaySchedule.push(matchDay) //Añadimos la jornada a la planificación
+           //this.matchDaySchedule.push(matchDay) //Añadimos la jornada a la planificación
+           round.push(matchDay)
        }
 
    }
@@ -80,7 +81,7 @@ export default class League{
    //Crea método que devuelve nombres de equipos en función de que el número de equipos sea par o impar
    getTeamNamesForSchedule(){
        const teamNames = this.getTeamNames()
-       console.log(teamNames)
+       //console.log(teamNames)
        if(teamNames.length % 2 == 0){//Si son pares
            return teamNames
        }else{
@@ -92,7 +93,7 @@ export default class League{
    }
 
 
-   setLocalTeams(){
+   setLocalTeams(round){
        /*
         const teamNames=this.getTeamNames()
         ahora usamos el meth getTeamNamesForSchedule que tiene en cuenta si el nº de equipos es impar
@@ -111,7 +112,8 @@ export default class League{
         */
         const maxHomeTeams =teamNames.length-2 
         let teamIndex=0
-        this.matchDaySchedule.forEach(matchDay => {//Por cada jornada
+        //this.matchDaySchedule.forEach(matchDay => {//Por cada jornada
+        round.forEach(matchDay => {//Por cada jornada
             matchDay.forEach(match =>{ //Por cada partido de la jornada
                 //Establecer el equipo local
                 //Accedemos al nombre del equipo por el array
@@ -130,11 +132,11 @@ export default class League{
         })
    }
 
-   setAwayTeams(){
+   setAwayTeams(round){
       const teamNames=this.getTeamNamesForSchedule()
        const maxAwayTeams = teamNames.length-2
        let teamIndex= maxAwayTeams
-       this.matchDaySchedule.forEach(matchDay =>{//Aquí recorro las jornadas
+       round.forEach(matchDay =>{//Aquí recorro las jornadas
            //Condición para que no establezca visitante en el primer partido...porque esa columna
            //es la primera, que en wiki se rellena directamente con el 8!!
            let isFirstMatch=true;
@@ -152,13 +154,13 @@ export default class League{
        })
    }
     //establecer último equipo de la lista como visitante o local alternativamente
-   fixLastTeamSchedule(){
+   fixLastTeamSchedule(round){
        let matchDayNumber=1 //Número de jornada: la primera es impar
 
        const teamNames= this.getTeamNamesForSchedule()
 
        const lastTeamName= teamNames[teamNames.length - 1]
-       this.matchDaySchedule.forEach(matchDay =>{
+       round.forEach(matchDay =>{
            const firstMatch =matchDay[0]
            if(matchDayNumber % 2 == 0) { //Si la jornada es par -> juega en casa
             firstMatch[AWAY_TEAM]= firstMatch[LOCAL_TEAM]
@@ -171,10 +173,38 @@ export default class League{
 
        })
    }
+   
    scheduleMatchDays(){
-       this.initSchedule()
-       this.setLocalTeams()
-       this.setAwayTeams()
-       this.fixLastTeamSchedule()  //Ajusta el último equipo que es el 8 del algoritmo wiki
+       for(let i=0; i< this.config.rounds; i++){
+            const newRound = this.createRound()
+            //Si la jornada es par, invierte partidos
+            if (i % 2 !=0){
+                for (const matchDay of newRound){
+                    for(const match of matchDay){
+                        const localTeam= match[LOCAL_TEAM]
+                        match[LOCAL_TEAM]= match[AWAY_TEAM]
+                        match[AWAY_TEAM] =  localTeam
+                    }
+                }
+            }
+            this.matchDaySchedule = this.matchDaySchedule.concat(newRound)
+       }
    }
+    
+   //Nuevo meth para crear rondas
+   createRound(){
+       const newRound =[]
+       //Creo el array vacío y lo paso a los meth que tengo...y tengo que cambiar los meth para esta nueva manera
+       //Aqui para genere las filas y columnas
+       this.initSchedule(newRound)
+       //Aquí para que me ponga los equipos locales
+       this.setLocalTeams(newRound)
+       //Aqui para poner los visitantes
+       this.setAwayTeams(newRound)
+       //Aquí para ajustar el primer equipo
+       this.fixLastTeamSchedule(newRound)  //Ajusta el último equipo que es el 8 del algoritmo wiki
+       return newRound
+   }
+
+
 }
