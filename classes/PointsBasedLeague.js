@@ -1,7 +1,7 @@
 //El nombre "League" se lo pongo yo al importar, le puedes poner el que sea porque la exportación está hecha con default
 //La clase PointsBasedLeague importa la clase League porque hereda de ella
 import League from './League.js'
-
+import {LOCAL_TEAM, AWAY_TEAM} from './League.js'
 
 //La clase
 export default class PointsBasedLeague extends League { 
@@ -37,5 +37,34 @@ export default class PointsBasedLeague extends League {
              goalsAgaints:0,
              ...customizedTeam  //Exparce propiedades del objeto con spreading...equivalente a cuando un array expande sus elementos dentro de otro 
          }
+    }
+    
+    generateGoals(){
+        return Math.round(Math.random() * 10);
+    }
+
+    //Meth abstracto de padre implementado aquí
+    play(match){
+        const homeGoals = this.generateGoals()
+        const awayGoals = this.generateGoals()
+        return{
+            homeTeam: match[LOCAL_TEAM],
+            homeGoals: homeGoals,
+            awayTeam: match[AWAY_TEAM],
+            awayGoals: awayGoals
+
+        }
+    }
+
+    getTeamForName(name){
+        return this.team.find(team => team.name == name)
+    }
+    updateTeams(result){
+        console.log('Actualizamos equipos', result)
+
+        const homeTeam = this.getTeamForName(result.homeTeam)
+        const awayTeam = this.getTeamForName(result.awayTeam)
+        console.log('TEAMS', homeTeam, awayTeam)
+        //Buscar al equipo por su nombre en el array de equipos
     }
 }

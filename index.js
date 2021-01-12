@@ -48,12 +48,17 @@ console.log('CONFIG', premier.config);      //Así si anda...
 premier.scheduleMatchDays()
 console.log(premier.matchDaySchedule)
 
-//Pintar las jornadas
+//Pintar las jornadas y sus partidos
 let i=1;
 premier.matchDaySchedule.forEach(matchDay =>{
     console.log(`JORNADA ${i}`)
     matchDay.forEach(match =>{
-        console.log(match.join (' vs '))
+          const home  = match[0] != null ? match[0] : 'DESCANSA' //Ternario: si match[0] es distinto de null, match[0] será = match[0]...si no será = 'DESCANSA'
+          const away = match[1] != null ? match[1] : 'DESCANSA'
+          console.log(`${home} vs ${away}`)
     })
     i++
 })
+
+//Comenzar liga
+premier.start()

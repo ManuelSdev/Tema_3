@@ -12,14 +12,13 @@ Array.prototype.shuffle = function()
 	return this;
 }
 
-const LOCAL_TEAM=0;
-const AWAY_TEAM=1;
+export const LOCAL_TEAM=0;
+export const AWAY_TEAM=1;
 export default class League{
    
     constructor(name, teams=[], config={}) {
         this.name=name;
         //this.teams=teams; Lo quitamos para crear un meth setupTeams
-        this.setupTeams(teams);
         this.matchDaySchedule=[]; //Calendario/planificación día de partido
         //Ahora el constructor llama a un meth setup al que le va  a pasar la configuración
         //El meth setup lo definimos después, en los métodos de la clase
@@ -27,6 +26,7 @@ export default class League{
         //this.defaultConfig= {rounds:1}//Como justo despues usamos el meth setup asignando this.defaultConfig a this.config, tenemos que declarar this.defaultConfig antes de usar this.setup
         //this.setup(config);
         this.setup(config)
+        this.setupTeams(teams);
     }
 
    setup(config){
@@ -190,6 +190,25 @@ export default class League{
             this.matchDaySchedule = this.matchDaySchedule.concat(newRound)
        }
    }
+   //Variante usando map
+   scheduleMatchDays2(){
+       const newRound =this.createRound()
+       const i =1
+       this.matchDaySchedule = this.matchDaySchedule.concat(newRound)
+       const secondRound = this.matchDaySchedule.map(matchDay =>{
+           return matchDay.map(match => {
+               const newMatch =[...match]
+               if(i % 2 != 0) {
+                   const localTeam = newMatch [LOCAL_TEAM]
+                   newMatch[LOCAL_TEAM] = newMatch [AWAY_TEAM]
+                   newMatch[AWAY_TEAM] = localTeam
+               }
+               return newMatch
+           })
+       })
+       this.matchDaySchedule = this.matchDaySchedule.concat(secondRound)
+
+   }
     
    //Nuevo meth para crear rondas
    createRound(){
@@ -205,6 +224,30 @@ export default class League{
        this.fixLastTeamSchedule(newRound)  //Ajusta el último equipo que es el 8 del algoritmo wiki
        return newRound
    }
+
+   start(){
+       //Queremos coger cada jornada
+        //De cada jornada, coger cada partido
+       //De momento, console.log con jugar partido y los equipos que participan
+       for( const matchDay of this.matchDaySchedule){ //Por cada jornada en la planificación de jornadas
+           for (const match of matchDay){
+               const result = this.play(match)// Tira error porque no está implementado...debe ser implementado en hijas
+               this.updateTeams(result) //Actualiza equipos con resultados del partido
+               console.log('Resultado', result)
+           }
+           console.log('Calcular clasificación')
+           console.log('Guardar resumen de la jornada')
+       }
+   }
+   //Abstracto
+   updateTeams(result){
+    throw new Error('updateTeams method not implemented')
+   }
+   //Meth abstracto
+   play(match){
+       throw new Error('play method not implemented')
+   }
+
 
 
 }
