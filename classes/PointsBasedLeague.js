@@ -57,14 +57,39 @@ export default class PointsBasedLeague extends League {
     }
 
     getTeamForName(name){
-        return this.team.find(team => team.name == name)
+        return this.teams.find(team => team.name == name)
     }
     updateTeams(result){
-        console.log('Actualizamos equipos', result)
-
+        console.log('Update teams', result)
+        //Buscar al equipo por su nombre en el array de equipos
         const homeTeam = this.getTeamForName(result.homeTeam)
         const awayTeam = this.getTeamForName(result.awayTeam)
+        //Añadir 3 puntos al equipo que gana
+        if(homeTeam && awayTeam){       // Solo si tengo home y away...por el tema del equipo fake 'descansa'...los undefined se consideran falsos en las booleanas
+            homeTeam.goalsFor+= result.homeGoals
+            homeTeam.goalsAgaints+=result.awayGoals
+            awayTeam.goalsFor+= result.awayGoals
+            awayTeam.goalsAgaints+= result.homeGoals
+            if(result.homeGoals > result.awayGoals){
+                homeTeam.points += this.config.pointsPerWin;//Suma 3....lo mismo que = homeTeam.point+this.config.pointsPerWin
+                homeTeam.matchesWon+=1;
+                awayTeam.points += this.config.pointsPerLose
+                awayTeam.matchesLost+=1;
+            }else if (result.homeGoals > result.awayGoals){
+                homeTeam.points += this.config.pointsPerLose
+                homeTeam.matchesLost+=1;
+                awayTeam.points += this.config.pointsPerWin
+                awayTeam.matchesWon+=1;
+    
+            }else{//empate
+                homeTeam.points += this.config.poinstPerDraw
+                homeTeam.matchesDraw+=1;
+                awayTeam.points += this.config.poinstPerDraw
+                awayTeam.matchesDraw+=1;
+            }
+
+        }
+
         console.log('TEAMS', homeTeam, awayTeam)
-        //Buscar al equipo por su nombre en el array de equipos
     }
 }
