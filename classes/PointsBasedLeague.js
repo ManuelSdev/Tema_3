@@ -13,7 +13,7 @@ export default class PointsBasedLeague extends League {
         const defaultConfig ={      //Esta var será un objeto con la configuración (por defecto) particular de este tipo de liga
             rounds:1,
             pointsPerWin:3,
-            poinstPerDraw:1,
+            poinstPerDrawn:1,
             pointsPerLose:0
         }
         //Crea parche con la config introducida en el constructor
@@ -34,7 +34,7 @@ export default class PointsBasedLeague extends League {
          return {
              points:0,
              goalsFor:0,
-             goalsAgaints:0,
+             goalsAgainst:0,
              ...customizedTeam  //Exparce propiedades del objeto con spreading...equivalente a cuando un array expande sus elementos dentro de otro 
          }
     }
@@ -60,16 +60,15 @@ export default class PointsBasedLeague extends League {
         return this.teams.find(team => team.name == name)
     }
     updateTeams(result){
-        console.log('Update teams', result)
         //Buscar al equipo por su nombre en el array de equipos
         const homeTeam = this.getTeamForName(result.homeTeam)
         const awayTeam = this.getTeamForName(result.awayTeam)
         //Añadir 3 puntos al equipo que gana
         if(homeTeam && awayTeam){       // Solo si tengo home y away...por el tema del equipo fake 'descansa'...los undefined se consideran falsos en las booleanas
             homeTeam.goalsFor+= result.homeGoals
-            homeTeam.goalsAgaints+=result.awayGoals
+            homeTeam.goalsAgainst+=result.awayGoals
             awayTeam.goalsFor+= result.awayGoals
-            awayTeam.goalsAgaints+= result.homeGoals
+            awayTeam.goalsAgainst+= result.homeGoals
             if(result.homeGoals > result.awayGoals){
                 homeTeam.points += this.config.pointsPerWin;//Suma 3....lo mismo que = homeTeam.point+this.config.pointsPerWin
                 homeTeam.matchesWon+=1;
@@ -79,17 +78,37 @@ export default class PointsBasedLeague extends League {
                 homeTeam.points += this.config.pointsPerLose
                 homeTeam.matchesLost+=1;
                 awayTeam.points += this.config.pointsPerWin
-                awayTeam.matchesWon+=1;
-    
+                awayTeam.matchesWon+=1;    
             }else{//empate
-                homeTeam.points += this.config.poinstPerDraw
-                homeTeam.matchesDraw+=1;
-                awayTeam.points += this.config.poinstPerDraw
-                awayTeam.matchesDraw+=1;
+                homeTeam.points += this.config.poinstPerDrawn
+                homeTeam.matchesDrawn+=1;
+                awayTeam.points += this.config.poinstPerDrawn
+                awayTeam.matchesDrawn+=1;
             }
-
         }
+    }
 
-        console.log('TEAMS', homeTeam, awayTeam)
+    getStandings(){ //meth (abstracto implementado) que devuelve clasificación (que es un listado de equipos)
+        this.teams.sort(function(teamA, teamB){
+            if(teamA.points > teamB.points){
+                return -1
+            }else if(teamA.points < teamB.points){
+                return 1
+            }else{ //Si empatan a puntos nos fijamos en la diferencia de goles
+                const goalSDiffA = teamA.goalsFor - teamA.goalsAgainst
+                const goalSDiffB = teamB.goalsFor - teamB.goalsAgainst
+                if(goalSDiffA > goalSDiffB){
+                    return -1
+                }else if(goalSDiffA < goalSDiffB){
+                    return 1
+                } else{
+                    return 0
+                }
+
+            }
+        })
+        console.log('standings')
+        //CLAVEEEEEEEEEEEEEEEEEEE TABLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA*************************************************************************************************
+        console.table(this.teams)
     }
 }

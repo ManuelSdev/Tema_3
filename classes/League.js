@@ -27,6 +27,7 @@ export default class League{
         //this.setup(config);
         this.setup(config)
         this.setupTeams(teams);
+        this.summaries =[] 
     }
 
    setup(config){
@@ -226,18 +227,39 @@ export default class League{
    }
 
    start(){
+       //ESTO CREA DIRECTAMENTE OTRO ATRIBUTO DE LA CLASE QUE TENDRÁN SUS INSTANCIAS
+       //¿Que ámbito tiene esto? solo este creo
+       //al final, lo pasamos al constructor...
+      // this.summaries =[] //Array de objetos matchDaySummary para guardar los resumenes que se crean más abajo
+
        //Queremos coger cada jornada
         //De cada jornada, coger cada partido
        //De momento, console.log con jugar partido y los equipos que participan
        for( const matchDay of this.matchDaySchedule){ //Por cada jornada en la planificación de jornadas
+            const matchDaySummary = {//resumen de una jornada...se tiene que guardar en algún sitio:crea summaries[]
+                results:[],
+                standings: undefined  //clasificación
+
+            }
            for (const match of matchDay){
                const result = this.play(match)// Tira error porque no está implementado...debe ser implementado en hijas
                this.updateTeams(result) //Actualiza equipos con resultados del partido
-               console.log('Resultado', result)
+               matchDaySummary.results.push(result)
            }
-           console.log('Calcular clasificación')
-           console.log('Guardar resumen de la jornada')
+           this.getStandings()
+           //Después de cada jornada hago copia del array
+           //Hay que copiar el objeto/valor final: recuerda direcciones de memoria
+           //El objeto a copiar es cada equipo en ese momento de la liga
+           matchDaySummary.standings= this.teams.map(team => Object.assign({}, team))//Actualizamos un objeto vacio con lo que tiene el otro objeto que contiene los datos
+           //console.log('Calcular clasificación')
+           //console.log('Guardar resumen de la jornada')
+           this.summaries.push(matchDaySummary)
        }
+   }
+
+   //Abst
+   getStandings(){//Desarrollado en pointBasedLeague
+       throw new Error('getStandings method not implemented')
    }
    //Abstracto
    updateTeams(result){

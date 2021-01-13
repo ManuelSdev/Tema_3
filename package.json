@@ -16,5 +16,8 @@
     "url": "https://github.com/ManuelSdev/Tema_3/issues"
   },
   "homepage": "https://github.com/ManuelSdev/Tema_3#readme",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "request": "^2.88.2"
+  }
 }

@@ -19,7 +19,7 @@ class PointBasedLeague extends League {
     constructor (name, teams=[], rounds=1, pointsPerWin=3, poinstPerDraw=1, pointsPerLose=0){
         //Aprovechamos el constructor de la madre
         super(name, teams, rounds)
-        this.poinstPerDraw=poinstPerDraw
+        this.poinstPerDrawn=poinstPerDrawn
         this.pointsPerLose=pointsPerLose
         this.pointsPerWin=pointsPerWin
 
